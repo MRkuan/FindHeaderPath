@@ -5,7 +5,7 @@
 如果字符格式出错，请在程序第一行加上“#coding=utf-8” ps：等号左右两边不要留空格(或者直接把程序中的中文用英文代替)  
 github 地址 https://github.com/MRkuan/FindHeaderPath 
 
- 2017年11月1日17:25:23 增加 是否生成的头文件相对路径是否一键加入到 .cproject 
+增加文件适用性，由原来的关键字字符相等，转变为 in 查找
 '''
 import os  
 
@@ -14,8 +14,8 @@ IsNeedTowriteCproject=True
 
 
 MySelectPath = os.path.abspath('.') 
-keyWordStart='<option id="gnu.c.compiler.option.include.paths.1655801871" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">\n'
-keyWordEnd='</option>\n'
+keyWordStart='<option id="gnu.c.compiler.option.include.paths.'
+keyWordEnd='</option>'
 #这个是用户相对路径头文件前缀
 KeyWordUser='<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}'
 #空set
@@ -72,11 +72,11 @@ else:
     for tmp in lines: 
         LinesCount=LinesCount+1 
         if 0==status:
-            if tmp.replace('\t', '')==keyWordStart:          
+            if keyWordStart in tmp.replace('\t', ''):          
                 satrtLines=LinesCount 
                 status=1
         elif 1==status:
-            if tmp.replace('\t', '')==keyWordEnd: 
+            if keyWordEnd in tmp.replace('\t', ''): 
                 endLines=LinesCount
                 for i in range(satrtLines,endLines-1) :
                     lines.pop(satrtLines)
